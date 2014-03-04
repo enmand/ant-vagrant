@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="vagrant" default="install">
+	<description>Vagrant setup targets.</description>
+
+	<dirname property="vagrant.basedir" file="${ant.file.vagrant}" />
+	<property file="${vagrant.basedir}/vagrant.properties" />
+
+	<include file="${vagrant.basedir}/base.xml" as="base" />
+	<include file="${vagrant.basedir}/ruby.xml" as="ruby" />
+
+	<target name="install"
+			depends="-check-vagrant-version,-upgrade-berks,-vagrant-plugins">
+	</target>
+
+
+	<!-- berks upgrade logic
+	     =================================================================== -->
+	<target name="-check-berks">
+		<exec executable="${berks.bin}" outputproperty="berks.version.current"
+			  failifexecutionfails="false">
+			<arg line="--version" />
+		</exec>
+		<condition property="berks.version.up_to_date">
+			<contains string="${berks.version.current}"
+					  substring="Berkshelf (${berks.version})" />
+		</condition>
+	</target>
+
+	<target name="-upgrade-berks"
+			depends="-check-berks,ruby.-upgrade-gem"
+			unless="${berks.version.up_to_date}">
+		<gem-install name="berkshelf" version="2.0.14" />
+	</target>
+
+	<!-- Berksfile installation
+	     =================================================================== -->
+	<target name="berksfile-install"
+		depends="-upgrade-berks">
+
+		<dirname property="berks.berksfile.dir" file="${berks.berksfile}" />
+		<exec executable="${berks.bin}" dir="${berks.berksfile.dir}">
+			<arg line="install" />
+		</exec>
+	</target>
+
+	<!-- Vagrant plugins macrodef
+	     =================================================================== -->
+	<macrodef name="install-vagrant-plugin">
+		<!--
+		Macro for installing vagrant plugins into your Vagrant install
+
+		Attributes:
+		name - the name of the plugin to install
+		-->
+		<attribute name="name" />
+
+		<sequential>
+			<exec executable="${vagrant.bin}">
+				<arg line="plugin" />
+				<arg line="install" />
+				<arg line="@{name}" />
+			</exec>
+		</sequential>
+	</macrodef>
+
+	<!-- Vagrant commands
+	     =================================================================== -->
+	<target name="-vagrant-berkshelf-plugin-dev"
+			depends="base.init">
+		<exec executable="git" dir="${build.dir}">
+			<arg line="clone" />
+			<arg line="--branch v${vagrant-berkshelf.version}" />
+			<arg line="git@github.com:RiotGames/vagrant-berkshelf.git" />
+		</exec>
+		<exec executable="bundle" dir="${build.dir}/vagrant-berkshelf" />
+		<exec executable="bundle" dir="${build.dir}/vagrant-berkshelf">
+			<arg line="exec" />
+			<arg line="thor" />
+			<arg line="gem:build" />
+		</exec>
+		<exec executable="vagrant" dir="${build.dir}/vagrant-berkshelf">
+			<arg line="plugin install" />
+			<arg line="--plugin-prerelease" />
+			<arg line="--plugin-source https://rubygems.org" />
+			<arg line="pkg/vagrant-berkshelf-${vagrant-berkshelf.version}.gem" />
+		</exec>
+	</target>
+
+   	<target name="-vagrant-plugins"
+			depends="berksfile-install,-check-vagrant-berksfile,-vagrant-plugins-berkshelf">
+		<install-vagrant-plugin name="vagrant-omnibus" />
+		<install-vagrant-plugin name="vagrant-vbguest" />
+	</target>
+
+	<target name="-vagrant-plugins-berkshelf"
+			if="vagrant.berksfile.not-installed">
+		<antcall target="vagrant.-vagrant-berkshelf-plugin-dev" />
+	</target>
+
+	<target name="-check-vagrant-berksfile">
+		<exec executable="vagrant" outputproperty="vagrant.plugins">
+			<arg line="plugin list" />
+		</exec>
+
+		<echo>${vagrant.plugins}</echo>
+
+		<condition property="vagrant.berksfile.not-installed">
+			<and>
+				<os family="mac" />
+				<not>
+					<contains string="${vagrant.plugins}"
+							substring="vagrant-berkshelf (${vagrant-berkshelf.version})" />
+				</not>
+			</and>
+		</condition>
+
+		<fail if="vagrant.berksfile.not-installed"
+			message="ERROR: ${line.separator}
+Darwin has some problems with vagrant-berkfile. See https://github.com/mitchellh/vagrant/issues/2402#issuecomment-27486807 for a fix" />
+
+	</target>
+
+	<target name="-check-vagrant-version">
+		<exec executable="${vagrant.bin}"
+			  outputproperty="vagrant.version.current"
+			  failifexecutionfails="false">
+			<arg line="--version" />
+		</exec>
+		<condition property="vagrant.version.up_to_date">
+			<contains string="${vagrant.version.current}"
+					  substring="Vagrant ${vagrant.version}" />
+		</condition>
+		<echo>${vagrant.version.current}</echo>
+		<fail unless="vagrant.version.up_to_date"
+			message="ERROR: Install Vagrant ${vagrant.version}${line.separator}
+			Visit https://vagrantup.com link and instructions.${line.separator}"
+		/>
+	</target>
+
+	<target name="up"
+			depends="berksfile-install">
+		<exec executable="${vagrant.bin}"></exec>
+	</target>
+
+</project>
+
