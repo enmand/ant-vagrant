@@ -7,6 +7,7 @@ The following applications are required:
 
 * [Apache Ant](https://ant.apache.org/) (1.9+)
 * [Vagrant](http://www.vagrantup.com/) (1.4.3)
+* [Ruby](https://www.ruby-lang.org/en/) (2.1+)
 
 Use
 -----
@@ -16,12 +17,19 @@ There are a few ways in which you should use these _build scripts_.
 To use the Vagrant build scripts, add an `<include>` to the top of the build file that requires Vagrant.
 
 		<include file="vagrant.xml" as="vagrant" />
+		<include file="ruby.xml" as="ruby" />
+
 
 ### Configuration
 Change the following properties in your `vagrant.properties` file. You can use `${vagrant.basedir}`, or your own  configuration from _build scripts_.:
 
 * `vagrant.vagrantfile` -- The (full or relative) path to your Vagrantfile.
 * `berks.berksfile` -- The (full of relative) path to your Berksfile
+
+Change the following properties in your `ruby.properties` file. You can use `${ruby.basedir}`, or your own  configuration from _build scripts_.:
+
+* `ruby.vagrantfile` -- The (full or relative) path to your Vagrantfile.
+
 
 ### Target dependence
 In order to make sure Vagrant, and some useful plugins (_vagrant-omnibus_, _vagrant-berkshelf_, and _vagrant-vbguest_), along with [Berkshelf](http://berkshelf.com).
