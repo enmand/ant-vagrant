@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="base" default="init">
+	<description>Base project build script.</description>
+
+	<dirname property="base.basedir" file="${ant.file.base}" />
+	<property file="${base.basedir}/base.properties" />
+
+	<!-- Public targets
+	     =================================================================== -->
+
+	<target name="init" description="Initialize build directories.">
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="clean" description="Delete build directories.">
+		<delete includeemptydirs="true">
+			<fileset dir="${build.dir}" erroronmissingdir="false" />
+		</delete>
+	</target>
+</project>
