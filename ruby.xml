@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ruby" default="install">
+	<description>Ruby setup targets.</description>
+
+	<dirname property="ruby.basedir" file="${ant.file.ruby}" />
+	<property file="${ruby.basedir}/ruby.properties" />
+	<include file="${ruby.basedir}/base.xml" as="base" />
+
+	<target name="install"
+			description="Install or update dependencies for Ruby"
+			depends="-upgrade-gem,-upgrade-bundler,bundle-gems" />
+
+
+	<target name="bundle-gems"
+			depends="-upgrade-gem,-upgrade-bundler">
+		<dirname property="ruby.gemfile.dir" file="${ruby.gemfile}" />
+		<exec executable="${bundler.bin}" dir="${ruby.gemfile.dir}"
+			  failonerror="true">
+			<arg value="install" />
+		</exec>
+	</target>
+
+	<!-- Ruby and gems checks
+	     =================================================================== -->
+
+	<target name="-check-ruby">
+		<exec executable="${ruby.bin}" outputproperty="ruby.version.current">
+			<arg line="--version" />
+		</exec>
+		<condition property="ruby.version.up_to_date">
+			<contains string="${ruby.version.current}"
+					  substring="ruby ${ruby.version}" />
+		</condition>
+		<fail unless="ruby.version.up_to_date"
+			message="ERROR: Install Ruby ~> ${ruby.version}${line.separator}
+			Visit https://rvm.io/ for Ruby Version Manager and ${line.separator}
+			install Ruby ${ruby.version}" />
+	</target>
+
+	<target name="-check-gem">
+		<exec executable="${gem.bin}" outputproperty="gem.version.current">
+			<arg line="--version" />
+		</exec>
+		<condition property="gem.version.up_to_date">
+			<contains string="${gem.version.current}"
+					  substring="${gem.version}" />
+		</condition>
+	</target>
+
+	<target name="-check-bundler">
+		<exec executable="${bundler.bin}" outputproperty="ruby.version.current"
+			  failifexecutionfails="false">
+			<arg line="--version" />
+		</exec>
+		<condition property="bundler.version.up_to_date">
+			<contains string="${bundler.version.current}"
+					  substring="Bundler version ${bundler.version}" />
+		</condition>
+	</target>
+
+	<!-- Gem and Bundler upgrade
+		 =================================================================== -->
+
+	<target name="-upgrade-gem"
+			depends="-check-ruby,-check-gem,base.init"
+			unless="${gem.version.up_to_date}">
+		<get dest="${build.dir}" verbose="true">
+			<url url="${gem.install.url}/${gem.install.name}.zip" />
+		</get>
+		<unzip src="${build.dir}/${gem.install.name}.zip"
+			   dest="${build.dir}/${gem.install.name}" />
+		<exec executable="ruby"
+			  dir="${build.dir}/${gem.install.name}/${gem.install.name}">
+			<arg line="setup.rb" />
+		</exec>
+	</target>
+
+	<target name="-upgrade-bundler"
+			depends="-check-ruby,-check-gem,-check-bundler,base.init"
+			unless="${bundler.version.up_to_date}">
+		<gem-install name="bundler" version="1.5.3" />
+	</target>
+
+	<!-- Reusable macros
+		 =================================================================== -->
+	<macrodef name="gem-install">
+		<!--
+		Generic macro for installing gems of a particular version.
+
+		Attributes:
+		name - the name of the gem to install
+		version - the version of the gem to install
+		-->
+		<attribute name="name" />
+		<attribute name="version" />
+
+		<sequential>
+			<exec executable="${gem.bin}">
+				<arg line="install" />
+				<arg line="@{name}" />
+				<arg line="-v @{version}" />
+			</exec>
+		</sequential>
+	</macrodef>
+</project>
