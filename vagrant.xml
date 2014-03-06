@@ -89,6 +89,7 @@
    	<target name="-vagrant-plugins"
 			depends="berksfile-install,-check-vagrant-berksfile,-vagrant-plugins-berkshelf">
 		<install-vagrant-plugin name="vagrant-omnibus" />
+		<install-vagrant-plugin name="vagrant-hostmanager" />
 		<install-vagrant-plugin name="vagrant-vbguest" />
 	</target>
 
