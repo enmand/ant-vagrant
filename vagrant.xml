@@ -147,7 +147,7 @@ Darwin has some problems with vagrant-berkfile. See https://github.com/mitchellh
 	<target name="down"
 			depends="berksfile-install">
 		<exec executable="${vagrant.bin}" dir="${vagrant.vagrantfile}">
-			<arg line="up" />
+			<arg line="down" />
 		</exec>
 	</target>
 
