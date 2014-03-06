@@ -30,13 +30,14 @@ Change the following properties in your `ruby.properties` file. You can use `${r
 
 * `ruby.vagrantfile` -- The (full or relative) path to your Vagrantfile.
 
-
 ### Target dependence
 In order to make sure Vagrant, and some useful plugins (_vagrant-omnibus_, _vagrant-berkshelf_, and _vagrant-vbguest_), along with [Berkshelf](http://berkshelf.com).
-	
+
 	<target name="SomethingThatNeedsVagrant" depends="vagrant.install">
 		...
-	</target>### Directly
+	</target>
+
+### Directly
 #### Installation
 To install Vagrant's plugins, and Berkshelf, you can target `vagrant.install` directly with `ant vagrant.install`.
 
