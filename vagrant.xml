@@ -139,8 +139,23 @@ Darwin has some problems with vagrant-berkfile. See https://github.com/mitchellh
 
 	<target name="up"
 			depends="berksfile-install">
-		<exec executable="${vagrant.bin}"></exec>
+		<exec executable="${vagrant.bin}" dir="${vagrant.vagrantfile}">
+			<arg line="up" />
+		</exec>
 	</target>
 
+	<target name="down"
+			depends="berksfile-install">
+		<exec executable="${vagrant.bin}" dir="${vagrant.vagrantfile}">
+			<arg line="up" />
+		</exec>
+	</target>
+
+	<target name="destroy"
+			depends="berksfile-install">
+		<exec executable="${vagrant.bin}" dir="${vagrant.vagrantfile}">
+			<arg line="destroy" />
+		</exec>
+	</target>
 </project>
 
