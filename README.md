@@ -49,3 +49,6 @@ Use `ant vagrant.up` to bring up your Vagrant environment
 
 ##### Shutdown Vagrant Environment
  `ant vagrant.down` to shutdown your Vagrant down.
+
+##### Destroying a Vagrant Environment
+ `ant vagrant.destroy` will completely destroy your Vagrant environment
