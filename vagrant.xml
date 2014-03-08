@@ -4,6 +4,7 @@
 
 	<dirname property="vagrant.basedir" file="${ant.file.vagrant}" />
 	<property file="${vagrant.basedir}/vagrant.properties" />
+	<dirname property="vagrant.vagrantfile.dir" file="${vagrant.vagrantfile}" />
 
 	<include file="${vagrant.basedir}/base.xml" as="base" />
 	<include file="${vagrant.basedir}/ruby.xml" as="ruby" />
@@ -11,7 +12,6 @@
 	<target name="install"
 			depends="-check-vagrant-version,-upgrade-berks,-vagrant-plugins">
 	</target>
-
 
 	<!-- berks upgrade logic
 	     =================================================================== -->
@@ -138,23 +138,21 @@ Darwin has some problems with vagrant-berkfile. See https://github.com/mitchellh
 		/>
 	</target>
 
-	<target name="up"
-			depends="berksfile-install">
-		<exec executable="${vagrant.bin}" dir="${vagrant.vagrantfile}">
+	<target name="up">
+		<echo>${vagrant.vagrantfile}</echo>
+		<exec executable="${vagrant.bin}" dir="${vagrant.vagrantfile.dir}">
 			<arg line="up" />
 		</exec>
 	</target>
 
-	<target name="down"
-			depends="berksfile-install">
-		<exec executable="${vagrant.bin}" dir="${vagrant.vagrantfile}">
+	<target name="down">
+		<exec executable="${vagrant.bin}" dir="${vagrant.vagrantfile.dir}">
 			<arg line="down" />
 		</exec>
 	</target>
 
-	<target name="destroy"
-			depends="berksfile-install">
-		<exec executable="${vagrant.bin}" dir="${vagrant.vagrantfile}">
+	<target name="destroy">
+		<exec executable="${vagrant.bin}" dir="${vagrant.vagrantfile.dir}">
 			<arg line="destroy" />
 		</exec>
 	</target>
