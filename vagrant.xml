@@ -91,6 +91,7 @@
 		<install-vagrant-plugin name="vagrant-omnibus" />
 		<install-vagrant-plugin name="vagrant-hostmanager" />
 		<install-vagrant-plugin name="vagrant-vbguest" />
+		<install-vagrant-plugin name="vagrant-inifile" />
 	</target>
 
 	<target name="-vagrant-plugins-berkshelf"
