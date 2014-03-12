@@ -6,8 +6,8 @@
 	<property file="${vagrant.basedir}/vagrant.properties" />
 	<dirname property="vagrant.vagrantfile.dir" file="${vagrant.vagrantfile}" />
 
-	<include file="${vagrant.basedir}/base.xml" as="base" />
-	<include file="${vagrant.basedir}/ruby.xml" as="ruby" />
+	<include file="${vagrant.basedir}/vagrant-ant-base.xml" as="base" />
+	<include file="${vagrant.basedir}/vagrant-ant-ruby.xml" as="ruby" />
 
 	<target name="install"
 			depends="-check-vagrant-version,-upgrade-berks,-vagrant-plugins">
