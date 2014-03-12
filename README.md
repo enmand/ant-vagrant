@@ -52,3 +52,19 @@ Use `ant vagrant.up` to bring up your Vagrant environment
 
 ##### Destroying a Vagrant Environment
  `ant vagrant.destroy` will completely destroy your Vagrant environment
+
+ Note for OS X
+--------------
+`ant vagrant.install` will fail miserably in most cases on the vagrant-berkshelf
+plugin install because of some strange permission issues with the gem requirements.
+
+To overcome these issues, run `ant vagrant.install` and wait for it to fail, then
+issue `sudo vagrant plugin install build/vagrant-berkshelf/pkg/vagrant-berkshelf-1.4.0.dev1.gem"`.
+
+Normally, Apache Ant would be responsible for issuing all the commands, but because
+we adon't have a tty (as in, Ant doesn't give us one), we need to do it manually.
+
+This relates to the issues located at https://github.com/mitchellh/vagrant/issues/2402
+and https://github.com/berkshelf/vagrant-berkshelf/issues/89.
+
+Once this issue is resolved, this can be included in the ant-vagrant/vagrant.xml.
