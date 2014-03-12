@@ -4,7 +4,7 @@
 
 	<dirname property="ruby.basedir" file="${ant.file.ruby}" />
 	<property file="${ruby.basedir}/ruby.properties" />
-	<include file="${ruby.basedir}/base.xml" as="base" />
+	<include file="${ruby.basedir}/vagrant-ant-base.xml" as="base" />
 
 	<target name="install"
 			description="Install or update dependencies for Ruby"
