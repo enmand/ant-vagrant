@@ -66,17 +66,15 @@
 	<!-- Vagrant commands
 	     =================================================================== -->
 	<target name="-vagrant-berkshelf-plugin-dev"
-			depends="base.init">
+			depends="base.init,ruby.-upgrade-bundler">
 		<exec executable="git" dir="${build.dir}">
 			<arg line="clone" />
-			<arg line="--branch v${vagrant-berkshelf.version}" />
-			<arg line="git@github.com:RiotGames/vagrant-berkshelf.git" />
+			<arg line="--branch vagrant-${vagrant.version}" />
+			<arg line="git@github.com:chulkilee/vagrant-berkshelf.git" />
 		</exec>
-		<exec executable="bundle" dir="${build.dir}/vagrant-berkshelf" />
 		<exec executable="bundle" dir="${build.dir}/vagrant-berkshelf">
-			<arg line="exec" />
-			<arg line="thor" />
-			<arg line="gem:build" />
+			<arg line="--without development" />
+			<arg line="install" />
 		</exec>
 		<exec executable="vagrant" dir="${build.dir}/vagrant-berkshelf">
 			<arg line="plugin install" />
