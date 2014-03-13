@@ -2,8 +2,8 @@
 <project name="base" default="init">
 	<description>Base project build script.</description>
 
-	<dirname property="base.basedir" file="${ant.file.base}" />
-	<property file="${base.basedir}/base.properties" />
+	<dirname property="vagrant-ant-base.basedir" file="${ant.file.base}" />
+	<property file="${vagrant-ant-base}/base.properties" />
 
 	<!-- Public targets
 	     =================================================================== -->

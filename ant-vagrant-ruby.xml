@@ -2,9 +2,9 @@
 <project name="ruby" default="install">
 	<description>Ruby setup targets.</description>
 
-	<dirname property="ruby.basedir" file="${ant.file.ruby}" />
-	<property file="${ruby.basedir}/ruby.properties" />
-	<include file="${ruby.basedir}/vagrant-ant-base.xml" as="base" />
+	<dirname property="ant-vagrant-ruby.basedir" file="${ant.file.ruby}" />
+	<property file="${ant-vagrant-ruby.basedir}/ruby.properties" />
+	<include file="${ant-vagrant-ruby.basedir}/ant-vagrant-base.xml" as="ant-vagrant-base" />
 
 	<target name="install"
 			description="Install or update dependencies for Ruby"
@@ -62,7 +62,7 @@
 		 =================================================================== -->
 
 	<target name="-upgrade-gem"
-			depends="-check-ruby,-check-gem,base.init"
+			depends="-check-ruby,-check-gem,ant-vagrant-base.init"
 			unless="${gem.version.up_to_date}">
 		<get dest="${build.dir}" verbose="true">
 			<url url="${gem.install.url}/${gem.install.name}.zip" />
@@ -76,7 +76,7 @@
 	</target>
 
 	<target name="-upgrade-bundler"
-			depends="-check-ruby,-check-gem,-check-bundler,base.init"
+			depends="-check-ruby,-check-gem,-check-bundler,ant-vagrant-base.init"
 			unless="${bundler.version.up_to_date}">
 		<gem-install name="bundler" version="1.5.3" />
 	</target>

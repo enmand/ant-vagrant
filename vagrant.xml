@@ -3,14 +3,15 @@
 	<description>Vagrant setup targets.</description>
 
 	<dirname property="vagrant.basedir" file="${ant.file.vagrant}" />
+	<include file="${vagrant.basedir}/ant-vagrant-base.xml" as="ant-vagrant-base" />
+	<include file="${vagrant.basedir}/ant-vagrant-ruby.xml" as="ant-vagrant-ruby" />
+
 	<property file="${vagrant.basedir}/vagrant.properties" />
 	<dirname property="vagrant.vagrantfile.dir" file="${vagrant.vagrantfile}" />
 
-	<include file="${vagrant.basedir}/vagrant-ant-base.xml" as="base" />
-	<include file="${vagrant.basedir}/vagrant-ant-ruby.xml" as="ruby" />
 
 	<target name="install"
-			depends="ruby.install,-check-vagrant-version,-upgrade-berks,berksfile-install,-vagrant-plugins">
+			depends="ant-vagrant-ruby.install,-check-vagrant-version,-upgrade-berks,berksfile-install,-vagrant-plugins">
 	</target>
 
 	<!-- berks upgrade logic
@@ -27,7 +28,7 @@
 	</target>
 
 	<target name="-upgrade-berks"
-			depends="-check-berks,ruby.-upgrade-gem"
+			depends="-check-berks,ant-vagrant-ruby.-upgrade-gem"
 			unless="${berks.version.up_to_date}">
 		<gem-install name="berkshelf" version="2.0.14" />
 	</target>
@@ -66,7 +67,7 @@
 	<!-- Vagrant commands
 	     =================================================================== -->
 	<target name="-vagrant-berkshelf-plugin-dev"
-			depends="base.init,ruby.-upgrade-bundler">
+			depends="ant-vagrant-base.init,ant-vagrant-ruby.-upgrade-bundler">
 		<exec executable="git" dir="${build.dir}">
 			<arg line="clone" />
 			<arg line="--branch vagrant-${vagrant.version}" />
