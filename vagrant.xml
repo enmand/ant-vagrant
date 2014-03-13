@@ -10,7 +10,7 @@
 	<include file="${vagrant.basedir}/vagrant-ant-ruby.xml" as="ruby" />
 
 	<target name="install"
-			depends="ruby.install,-check-vagrant-version,-upgrade-berks,-vagrant-plugins">
+			depends="ruby.install,-check-vagrant-version,-upgrade-berks,berksfile-install,-vagrant-plugins">
 	</target>
 
 	<!-- berks upgrade logic
